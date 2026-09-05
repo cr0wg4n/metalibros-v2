@@ -1,0 +1,27 @@
+{
+  "name": "metalibros-v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "author": {
+    "name": "Mauricio Matias"
+  },
+  "scripts": {
+    "frontend": "npm run dev -w frontend",
+    "backend": "npm run start -w backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cr0wg4n/metalibros-v2.git"
+  },
+  "keywords": [],
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/cr0wg4n/metalibros-v2/issues"
+  },
+  "homepage": "https://github.com/cr0wg4n/metalibros-v2#readme"
+}
