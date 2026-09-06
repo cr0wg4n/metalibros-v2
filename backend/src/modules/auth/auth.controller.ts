@@ -19,10 +19,10 @@ import { AuthService, REFRESH_TOKEN_TTL_MS } from './auth.service.js'
 import { SignUpDto } from './dto/sign-up.dto.js'
 import { LoginDto } from './dto/login.dto.js'
 import { JwtAuthGuard } from './jwt-auth.guard.js'
-import { env } from '../config/env.js'
+import { env } from '../../config/env.js'
 import { ProfileService } from '../profile/profile.service.js'
 import { UpdateProfileDto } from '../profile/dto/update-profile.dto.js'
-import { createImageUploadInterceptor } from '../common/create-image-upload-interceptor.js'
+import { createImageUploadInterceptor } from '../../common/create-image-upload-interceptor.js'
 
 const REFRESH_COOKIE_NAME = 'refreshToken'
 const REFRESH_COOKIE_OPTIONS = {

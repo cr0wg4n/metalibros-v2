@@ -146,7 +146,7 @@ function BookRegisterForm({ fieldErrors = {}, formError, isSubmitting = false, o
         <Textarea
           label="Descripción"
           id="description"
-          rows={5}
+          rows={3}
           placeholder="Escribe una breve descripción del libro…"
           value={description}
           onChange={(event) => setDescription(event.target.value)}

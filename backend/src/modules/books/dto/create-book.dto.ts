@@ -1,5 +1,5 @@
 import { IsArray, IsEnum, IsISO8601, IsNumber, IsOptional, IsString, Min, MinLength } from 'class-validator'
-import { BookStatus } from '../../generated/prisma/client.js'
+import { BookStatus } from '../../../generated/prisma/client.js'
 
 export class CreateBookDto {
   @IsString()

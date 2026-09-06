@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
-import { PrismaService } from '../prisma/prisma.service.js'
-import type { Prisma } from '../generated/prisma/client.js'
+import { PrismaService } from '../../prisma/prisma.service.js'
+import type { Prisma } from '../../generated/prisma/client.js'
 import type { CreateSaleDto } from './dto/create-sale.dto.js'
 import type { ListSalesQueryDto } from './dto/list-sales-query.dto.js'
 

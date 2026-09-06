@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer'
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator'
-import { BookStatus } from '../../generated/prisma/client.js'
+import { BookStatus } from '../../../generated/prisma/client.js'
 
 export class ListBooksQueryDto {
   @IsOptional()

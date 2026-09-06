@@ -1,51 +1,15 @@
-import { useEffect, useState } from 'react'
 import DashboardNav from '../components/DashboardNav'
 import BookCard from '@/features/books/components/BookCard'
 import Pagination from '@/components/ui/Pagination'
 import Input from '@/components/ui/Input'
-import { useDebouncedValue } from '@/hooks/use-debounced-value'
-import { listBooks, resolveCoverUrl, type ApiBook } from '@/features/books/services/books-service'
+import { usePublishedBooks } from '@/features/books/hooks/use-published-books'
+import { resolveCoverUrl } from '@/features/books/services/books-service'
 
 const PAGE_SIZE = 4
-const SEARCH_DEBOUNCE_MS = 300
 
 function DashboardBooksPage() {
-  const [books, setBooks] = useState<ApiBook[]>([])
-  const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [search, setSearch] = useState('')
-
-  const debouncedSearch = useDebouncedValue(search.trim(), SEARCH_DEBOUNCE_MS)
-
-  useEffect(() => {
-    setPage(1)
-  }, [debouncedSearch])
-
-  useEffect(() => {
-    let cancelled = false
-    setIsLoading(true)
-
-    listBooks({ status: 'PUBLISHED', page, limit: PAGE_SIZE, search: debouncedSearch || undefined })
-      .then((response) => {
-        if (cancelled) return
-        setBooks(response.data)
-        setTotal(response.meta.total)
-      })
-      .catch(() => {
-        if (!cancelled) setError('No se pudieron cargar los libros')
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoading(false)
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [page, debouncedSearch])
-
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const { books, page, setPage, totalPages, search, setSearch, debouncedSearch, isLoading, error } =
+    usePublishedBooks(PAGE_SIZE)
 
   return (
     <section className="w-full pb-8" aria-label="Contenido principal del dashboard">

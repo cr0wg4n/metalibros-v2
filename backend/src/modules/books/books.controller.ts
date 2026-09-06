@@ -8,17 +8,20 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
+import type { Request } from 'express'
 import { BooksService } from './books.service.js'
 import { CreateBookDto } from './dto/create-book.dto.js'
 import { UpdateBookDto } from './dto/update-book.dto.js'
 import { UpdateBookStatusDto } from './dto/update-book-status.dto.js'
 import { ListBooksQueryDto } from './dto/list-books-query.dto.js'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js'
-import { createImageUploadInterceptor } from '../common/create-image-upload-interceptor.js'
+import { OptionalJwtAuthGuard } from '../auth/optional-jwt-auth.guard.js'
+import { createImageUploadInterceptor } from '../../common/create-image-upload-interceptor.js'
 import { StockMovementsService } from '../stock-movements/stock-movements.service.js'
 
 const coverUploadInterceptor = createImageUploadInterceptor('books')
@@ -37,13 +40,15 @@ export class BooksController {
   }
 
   @Get()
-  findAll(@Query() query: ListBooksQueryDto) {
-    return this.booksService.findAll(query)
+  @UseGuards(OptionalJwtAuthGuard)
+  findAll(@Req() request: Request, @Query() query: ListBooksQueryDto) {
+    return this.booksService.findAll(query, Boolean(request.user))
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.booksService.findOne(id)
+  @UseGuards(OptionalJwtAuthGuard)
+  findOne(@Req() request: Request, @Param('id') id: string) {
+    return this.booksService.findOne(id, Boolean(request.user))
   }
 
   @Patch(':id')

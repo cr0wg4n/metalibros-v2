@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
-import { PrismaService } from '../prisma/prisma.service.js'
+import { PrismaService } from '../../prisma/prisma.service.js'
 import { StockMovementsService } from '../stock-movements/stock-movements.service.js'
-import type { Prisma } from '../generated/prisma/client.js'
+import type { Prisma } from '../../generated/prisma/client.js'
 import type { CreateBookDto } from './dto/create-book.dto.js'
 import type { UpdateBookDto } from './dto/update-book.dto.js'
 import type { UpdateBookStatusDto } from './dto/update-book-status.dto.js'
@@ -29,10 +29,12 @@ export class BooksService {
     return { ...book, stock: 0 }
   }
 
-  async findAll(query: ListBooksQueryDto) {
+  async findAll(query: ListBooksQueryDto, isAuthenticated = true) {
     const where: Prisma.BookWhereInput = {}
 
-    if (query.status) {
+    if (!isAuthenticated) {
+      where.status = 'PUBLISHED'
+    } else if (query.status) {
       where.status = query.status
     }
 
@@ -61,9 +63,10 @@ export class BooksService {
     return { data, meta: { page: query.page, limit: query.limit, total } }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, isAuthenticated = true) {
     const book = await this.prisma.book.findUnique({ where: { id }, include: { categories: true } })
-    if (!book) {
+
+    if (!book || (!isAuthenticated && book.status !== 'PUBLISHED')) {
       throw new NotFoundException('Libro no encontrado')
     }
 
