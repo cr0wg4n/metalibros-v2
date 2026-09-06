@@ -1,21 +1,21 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import LoginForm from '../components/LoginForm'
-import { loginSchema, type LoginFormValues } from '../schemas/login-schema'
-import { login } from '../services/auth-service'
+import SignUpForm from '../components/SignUpForm'
+import { signUpSchema, type SignUpFormValues } from '../schemas/sign-up-schema'
+import { signUp } from '../services/auth-service'
 
-type FieldErrors = Partial<Record<keyof LoginFormValues, string>>
+type FieldErrors = Partial<Record<keyof SignUpFormValues, string>>
 
-function LoginPage() {
+function SignUpPage() {
   const navigate = useNavigate()
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  async function handleSubmit(values: LoginFormValues) {
+  async function handleSubmit(values: SignUpFormValues) {
     setFormError(null)
 
-    const result = loginSchema.safeParse(values)
+    const result = signUpSchema.safeParse(values)
     if (!result.success) {
       const errors: FieldErrors = {}
       for (const issue of result.error.issues) {
@@ -30,23 +30,24 @@ function LoginPage() {
     setIsSubmitting(true)
 
     try {
-      await login(result.data)
+      const { name, email, password } = result.data
+      await signUp({ name, email, password })
       navigate('/account')
     } catch (error) {
-      setFormError(error instanceof Error ? error.message : 'No se pudo iniciar sesión')
+      setFormError(error instanceof Error ? error.message : 'No se pudo crear la cuenta')
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <main className="flex min-h-[70vh] items-center justify-center px-4 py-8" aria-label="Formulario de ingreso">
+    <main className="flex min-h-[70vh] items-center justify-center px-4 py-8" aria-label="Formulario de registro">
       <section className="w-full max-w-115 rounded-2xl border border-primary/12 bg-white p-8 shadow-[0_18px_38px_rgba(51,104,160,0.12)]">
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-primary">Inicia sesión</h1>
+          <h1 className="text-2xl font-bold text-primary">Crea tu cuenta</h1>
         </div>
 
-        <LoginForm
+        <SignUpForm
           fieldErrors={fieldErrors}
           formError={formError}
           isSubmitting={isSubmitting}
@@ -54,9 +55,9 @@ function LoginPage() {
         />
 
         <p className="mt-6 text-center text-sm text-muted">
-          ¿No tienes cuenta?{' '}
-          <Link className="font-semibold text-primary no-underline" to="/signup">
-            Regístrate
+          ¿Ya tienes cuenta?{' '}
+          <Link className="font-semibold text-primary no-underline" to="/login">
+            Inicia sesión
           </Link>
         </p>
       </section>
@@ -64,4 +65,4 @@ function LoginPage() {
   )
 }
 
-export default LoginPage
+export default SignUpPage

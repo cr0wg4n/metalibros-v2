@@ -1,28 +1,39 @@
 import { useState, type SubmitEvent } from 'react'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
-import type { LoginFormValues } from '../schemas/login-schema'
+import type { SignUpFormValues } from '../schemas/sign-up-schema'
 
-type FieldErrors = Partial<Record<keyof LoginFormValues, string>>
+type FieldErrors = Partial<Record<keyof SignUpFormValues, string>>
 
-interface LoginFormProps {
+interface SignUpFormProps {
   fieldErrors?: FieldErrors
   formError?: string | null
   isSubmitting?: boolean
-  onSubmit: (values: LoginFormValues) => void
+  onSubmit: (values: SignUpFormValues) => void
 }
 
-function LoginForm({ fieldErrors = {}, formError, isSubmitting = false, onSubmit }: LoginFormProps) {
+function SignUpForm({ fieldErrors = {}, formError, isSubmitting = false, onSubmit }: SignUpFormProps) {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
-    onSubmit({ email, password })
+    onSubmit({ name, email, password, confirmPassword })
   }
 
   return (
     <form className="flex flex-col gap-5" onSubmit={handleSubmit} noValidate>
+      <Input
+        label="Nombre"
+        id="name"
+        type="text"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        error={fieldErrors.name}
+      />
+
       <Input
         label="Correo electrónico"
         id="email"
@@ -41,11 +52,14 @@ function LoginForm({ fieldErrors = {}, formError, isSubmitting = false, onSubmit
         error={fieldErrors.password}
       />
 
-      <div className="flex items-center justify-between gap-4 text-sm">
-        <a className="font-semibold text-primary no-underline" href="#">
-          ¿Olvidaste tu contraseña?
-        </a>
-      </div>
+      <Input
+        label="Repetir contraseña"
+        id="confirmPassword"
+        type="password"
+        value={confirmPassword}
+        onChange={(event) => setConfirmPassword(event.target.value)}
+        error={fieldErrors.confirmPassword}
+      />
 
       {formError && (
         <p className="text-sm text-red-600" role="alert">
@@ -54,10 +68,10 @@ function LoginForm({ fieldErrors = {}, formError, isSubmitting = false, onSubmit
       )}
 
       <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Ingresando…' : 'Entrar'}
+        {isSubmitting ? 'Creando cuenta…' : 'Crear cuenta'}
       </Button>
     </form>
   )
 }
 
-export default LoginForm
+export default SignUpForm
