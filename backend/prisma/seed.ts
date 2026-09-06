@@ -12,6 +12,9 @@ const prisma = new PrismaClient({
 })
 
 const CATEGORY_NAMES = ['Ciencia Ficción', 'Filosofía', 'Clásicos', 'Pensamiento Crítico', 'Romance', 'Política']
+const CITIES = ['La Paz', 'Cochabamba', 'Santa Cruz', 'Oruro', 'Potosí', 'Tarija', 'Chuquisaca', 'Beni', 'Pando']
+const INITIAL_STOCK_PER_BOOK = 20
+const MAX_SALES_PER_BOOK = 6
 
 interface SeedBook {
   name: string
@@ -154,7 +157,52 @@ async function main() {
     createdCount += 1
   }
 
-  console.log(`Seed complete: ${categoryIdByName.size} categories ensured, ${createdCount} books created.`)
+  console.log(`Carga inicial completa: ${categoryIdByName.size} categorías aseguradas, ${createdCount} libros creados.`)
+
+  await seedStockAndSales()
+}
+
+async function seedStockAndSales() {
+  const existingSalesCount = await prisma.sale.count()
+  if (existingSalesCount > 0) {
+    console.log('Los datos de ventas ya fueron cargados, omitiendo.')
+    return
+  }
+
+  const books = await prisma.book.findMany()
+
+  for (const book of books) {
+    await prisma.stockMovement.create({
+      data: { bookId: book.id, quantity: INITIAL_STOCK_PER_BOOK, type: 'RESTOCK', note: 'Stock inicial (seed)' },
+    })
+  }
+
+  let salesCreated = 0
+  const now = Date.now()
+
+  for (const book of books) {
+    const salesForBook = 1 + Math.floor(Math.random() * MAX_SALES_PER_BOOK)
+
+    for (let i = 0; i < salesForBook; i++) {
+      const city = CITIES[Math.floor(Math.random() * CITIES.length)]
+      const daysAgo = Math.floor(Math.random() * 90)
+      const soldAt = new Date(now - daysAgo * 24 * 60 * 60 * 1000)
+
+      const sale = await prisma.sale.create({
+        data: { city, revenue: book.sellingPrice, bookId: book.id, soldAt },
+      })
+
+      await prisma.stockMovement.create({
+        data: { bookId: book.id, quantity: -1, type: 'SALE', saleId: sale.id },
+      })
+
+      salesCreated += 1
+    }
+  }
+
+  console.log(
+    `Se cargaron ${INITIAL_STOCK_PER_BOOK} unidades de stock inicial para ${books.length} libros y ${salesCreated} ventas.`,
+  )
 }
 
 main()

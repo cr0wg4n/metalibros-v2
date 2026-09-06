@@ -20,6 +20,7 @@ export interface ApiBook {
   status: ApiBookStatus
   coverImage: string | null
   categories: ApiBookCategory[]
+  stock: number
   createdAt: string
   updatedAt: string
 }
