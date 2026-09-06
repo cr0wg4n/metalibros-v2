@@ -19,12 +19,16 @@ import { UpdateBookStatusDto } from './dto/update-book-status.dto.js'
 import { ListBooksQueryDto } from './dto/list-books-query.dto.js'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js'
 import { createImageUploadInterceptor } from '../common/create-image-upload-interceptor.js'
+import { StockMovementsService } from '../stock-movements/stock-movements.service.js'
 
 const coverUploadInterceptor = createImageUploadInterceptor('books')
 
 @Controller('books')
 export class BooksController {
-  constructor(private readonly booksService: BooksService) {}
+  constructor(
+    private readonly booksService: BooksService,
+    private readonly stockMovementsService: StockMovementsService,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -68,5 +72,17 @@ export class BooksController {
   @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.booksService.remove(id)
+  }
+
+  @Get(':id/stock')
+  @UseGuards(JwtAuthGuard)
+  getStock(@Param('id') id: string) {
+    return this.stockMovementsService.getStockForBook(id)
+  }
+
+  @Get(':id/stock-movements')
+  @UseGuards(JwtAuthGuard)
+  getStockMovements(@Param('id') id: string) {
+    return this.stockMovementsService.getHistoryForBook(id)
   }
 }

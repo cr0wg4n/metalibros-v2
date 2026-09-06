@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service.js'
+import { StockMovementsService } from '../stock-movements/stock-movements.service.js'
 import type { Prisma } from '../generated/prisma/client.js'
 import type { CreateBookDto } from './dto/create-book.dto.js'
 import type { UpdateBookDto } from './dto/update-book.dto.js'
@@ -8,12 +9,15 @@ import type { ListBooksQueryDto } from './dto/list-books-query.dto.js'
 
 @Injectable()
 export class BooksService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly stockMovementsService: StockMovementsService,
+  ) {}
 
   async create(dto: CreateBookDto) {
     const { categoryIds, releaseDate, ...rest } = dto
 
-    return this.prisma.book.create({
+    const book = await this.prisma.book.create({
       data: {
         ...rest,
         releaseDate: new Date(releaseDate),
@@ -21,6 +25,8 @@ export class BooksService {
       },
       include: { categories: true },
     })
+
+    return { ...book, stock: 0 }
   }
 
   async findAll(query: ListBooksQueryDto) {
@@ -38,7 +44,7 @@ export class BooksService {
       where.OR = [{ name: { contains: query.search } }, { author: { contains: query.search } }]
     }
 
-    const [data, total] = await Promise.all([
+    const [books, total] = await Promise.all([
       this.prisma.book.findMany({
         where,
         include: { categories: true },
@@ -49,6 +55,9 @@ export class BooksService {
       this.prisma.book.count({ where }),
     ])
 
+    const stockByBookId = await this.stockMovementsService.sumStockForBooks(books.map((book) => book.id))
+    const data = books.map((book) => ({ ...book, stock: stockByBookId.get(book.id) ?? 0 }))
+
     return { data, meta: { page: query.page, limit: query.limit, total } }
   }
 
@@ -57,7 +66,8 @@ export class BooksService {
     if (!book) {
       throw new NotFoundException('Libro no encontrado')
     }
-    return book
+
+    return { ...book, stock: await this.stockMovementsService.sumStock(id) }
   }
 
   async update(id: string, dto: UpdateBookDto) {
@@ -65,7 +75,7 @@ export class BooksService {
 
     const { categoryIds, releaseDate, ...rest } = dto
 
-    return this.prisma.book.update({
+    const book = await this.prisma.book.update({
       where: { id },
       data: {
         ...rest,
@@ -74,6 +84,8 @@ export class BooksService {
       },
       include: { categories: true },
     })
+
+    return { ...book, stock: await this.stockMovementsService.sumStock(id) }
   }
 
   async updateStatus(id: string, dto: UpdateBookStatusDto) {

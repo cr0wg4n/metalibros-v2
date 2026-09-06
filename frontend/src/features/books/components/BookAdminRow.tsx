@@ -21,7 +21,7 @@ function BookAdminRow({ book, isUpdating, onToggleStatus }: BookAdminRowProps) {
       <td className="px-4 py-3 whitespace-nowrap text-muted">{book.author}</td>
       <td className="px-4 py-3 whitespace-nowrap text-muted">Bs {book.sellingPrice}</td>
       <td className="px-4 py-3 whitespace-nowrap text-muted">{releaseYear}</td>
-      <td className="px-4 py-3 text-sm whitespace-nowrap text-muted italic">Próximamente</td>
+      <td className="px-4 py-3 whitespace-nowrap text-muted">{book.stock}</td>
       <td className="px-4 py-3">
         <Button
           type="button"
