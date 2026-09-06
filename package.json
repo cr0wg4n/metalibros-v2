@@ -11,6 +11,7 @@
     "name": "Mauricio Matias"
   },
   "scripts": {
+    "build": "concurrently \"npm run build -w frontend\" \"npm run build -w backend\"",
     "all": "concurrently \"npm run frontend\" \"npm run backend\"",
     "migrate": "npm run db:migrate -w backend",
     "generate": "npm run db:generate -w backend",

@@ -4,7 +4,10 @@ import BookAdminTable from '@/features/books/components/BookAdminTable'
 import Pagination from '@/components/ui/Pagination'
 import Input from '@/components/ui/Input'
 import { useDebouncedValue } from '@/hooks/use-debounced-value'
+import { useAuthStore } from '@/store/auth-store'
 import {
+  adjustBookStock,
+  deleteBook,
   listBooks,
   updateBookStatus,
   type ApiBook,
@@ -17,6 +20,7 @@ const SEARCH_DEBOUNCE_MS = 300
 type StatusFilter = ApiBookStatus | 'ALL'
 
 function BookAdminPage() {
+  const isInitializing = useAuthStore((state) => state.isInitializing)
   const [books, setBooks] = useState<ApiBook[]>([])
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
@@ -25,6 +29,8 @@ function BookAdminPage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL')
   const [updatingBookId, setUpdatingBookId] = useState<string | null>(null)
+  const [deletingBookId, setDeletingBookId] = useState<string | null>(null)
+  const [adjustingStockBookId, setAdjustingStockBookId] = useState<string | null>(null)
 
   const debouncedSearch = useDebouncedValue(search.trim(), SEARCH_DEBOUNCE_MS)
 
@@ -33,6 +39,8 @@ function BookAdminPage() {
   }, [debouncedSearch, statusFilter])
 
   useEffect(() => {
+    if (isInitializing) return
+
     let cancelled = false
     setIsLoading(true)
     setError(null)
@@ -58,7 +66,7 @@ function BookAdminPage() {
     return () => {
       cancelled = true
     }
-  }, [page, debouncedSearch, statusFilter])
+  }, [page, debouncedSearch, statusFilter, isInitializing])
 
   async function handleToggleStatus(book: ApiBook) {
     const nextStatus: ApiBookStatus = book.status === 'PUBLISHED' ? 'UNPUBLISHED' : 'PUBLISHED'
@@ -73,6 +81,39 @@ function BookAdminPage() {
       setError(err instanceof Error ? err.message : 'No se pudo actualizar el estado del libro')
     } finally {
       setUpdatingBookId(null)
+    }
+  }
+
+  async function handleDelete(book: ApiBook) {
+    setDeletingBookId(book.id)
+    setError(null)
+
+    try {
+      await deleteBook(book.id)
+      setBooks((prev) => prev.filter((item) => item.id !== book.id))
+      setTotal((prev) => prev - 1)
+
+      if (books.length === 1 && page > 1) {
+        setPage((prev) => prev - 1)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo eliminar el libro')
+    } finally {
+      setDeletingBookId(null)
+    }
+  }
+
+  async function handleAdjustStock(book: ApiBook, quantity: number) {
+    setAdjustingStockBookId(book.id)
+    setError(null)
+
+    try {
+      await adjustBookStock(book.id, quantity)
+      setBooks((prev) => prev.map((item) => (item.id === book.id ? { ...item, stock: item.stock + quantity } : item)))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo ajustar el stock')
+    } finally {
+      setAdjustingStockBookId(null)
     }
   }
 
@@ -123,7 +164,15 @@ function BookAdminPage() {
         {!isLoading && books.length === 0 && <p className="text-muted">No se encontraron libros.</p>}
 
         {!isLoading && books.length > 0 && (
-          <BookAdminTable books={books} updatingBookId={updatingBookId} onToggleStatus={handleToggleStatus} />
+          <BookAdminTable
+            books={books}
+            updatingBookId={updatingBookId}
+            deletingBookId={deletingBookId}
+            adjustingStockBookId={adjustingStockBookId}
+            onToggleStatus={handleToggleStatus}
+            onDelete={handleDelete}
+            onAdjustStock={handleAdjustStock}
+          />
         )}
 
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />

@@ -1,9 +1,13 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
-import { PrismaService } from '../../prisma/prisma.service.js'
-import type { User, Profile } from '../../generated/prisma/client.js'
-import type { UpdateProfileDto } from './dto/update-profile.dto.js'
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service.js';
+import type { User, Profile } from '../../generated/prisma/client.js';
+import type { UpdateProfileDto } from './dto/update-profile.dto.js';
 
-type UserWithProfile = User & { profile: Profile | null }
+type UserWithProfile = User & { profile: Profile | null };
 
 @Injectable()
 export class ProfileService {
@@ -13,20 +17,22 @@ export class ProfileService {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { profile: true },
-    })
+    });
 
     if (!user) {
-      throw new NotFoundException('Usuario no encontrado')
+      throw new NotFoundException('Usuario no encontrado');
     }
 
-    return this.toProfileView(user)
+    return this.toProfileView(user);
   }
 
   async updateProfile(userId: string, dto: UpdateProfileDto) {
     if (dto.email) {
-      const existing = await this.prisma.user.findUnique({ where: { email: dto.email } })
+      const existing = await this.prisma.user.findUnique({
+        where: { email: dto.email },
+      });
       if (existing && existing.id !== userId) {
-        throw new ConflictException('Ya existe una cuenta con este correo')
+        throw new ConflictException('Ya existe una cuenta con este correo');
       }
     }
 
@@ -46,9 +52,9 @@ export class ProfileService {
         },
       },
       include: { profile: true },
-    })
+    });
 
-    return this.toProfileView(user)
+    return this.toProfileView(user);
   }
 
   async updateAvatar(userId: string, avatar: string) {
@@ -63,9 +69,9 @@ export class ProfileService {
         },
       },
       include: { profile: true },
-    })
+    });
 
-    return this.toProfileView(user)
+    return this.toProfileView(user);
   }
 
   private toProfileView(user: UserWithProfile) {
@@ -76,6 +82,6 @@ export class ProfileService {
       about: user.profile?.about ?? null,
       avatar: user.profile?.avatar ?? null,
       phone: user.profile?.phone ?? null,
-    }
+    };
   }
 }

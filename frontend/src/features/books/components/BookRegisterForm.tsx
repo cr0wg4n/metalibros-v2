@@ -1,4 +1,4 @@
-import { useEffect, useState, type SubmitEvent } from 'react'
+import { useEffect, useState, type ReactNode, type SubmitEvent } from 'react'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Textarea from '@/components/ui/Textarea'
@@ -20,20 +20,33 @@ type FieldErrors = Partial<
 >
 
 interface BookRegisterFormProps {
+  initialValues?: Omit<BookRegisterFormValues, 'coverFile'>
+  initialCoverUrl?: string | null
   fieldErrors?: FieldErrors
   formError?: string | null
   isSubmitting?: boolean
+  submitLabel?: string
+  extraActions?: ReactNode
   onSubmit: (values: BookRegisterFormValues) => void
 }
 
-function BookRegisterForm({ fieldErrors = {}, formError, isSubmitting = false, onSubmit }: BookRegisterFormProps) {
-  const [name, setName] = useState('')
-  const [author, setAuthor] = useState('')
-  const [description, setDescription] = useState('')
-  const [sellingPrice, setSellingPrice] = useState('')
-  const [costPrice, setCostPrice] = useState('')
-  const [releaseDate, setReleaseDate] = useState('')
-  const [categoryIds, setCategoryIds] = useState<string[]>([])
+function BookRegisterForm({
+  initialValues,
+  initialCoverUrl = null,
+  fieldErrors = {},
+  formError,
+  isSubmitting = false,
+  submitLabel = 'Guardar libro',
+  extraActions,
+  onSubmit,
+}: BookRegisterFormProps) {
+  const [name, setName] = useState(initialValues?.name ?? '')
+  const [author, setAuthor] = useState(initialValues?.author ?? '')
+  const [description, setDescription] = useState(initialValues?.description ?? '')
+  const [sellingPrice, setSellingPrice] = useState(initialValues?.sellingPrice ?? '')
+  const [costPrice, setCostPrice] = useState(initialValues?.costPrice ?? '')
+  const [releaseDate, setReleaseDate] = useState(initialValues?.releaseDate ?? '')
+  const [categoryIds, setCategoryIds] = useState<string[]>(initialValues?.categoryIds ?? [])
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null)
 
@@ -48,6 +61,8 @@ function BookRegisterForm({ fieldErrors = {}, formError, isSubmitting = false, o
 
     return () => URL.revokeObjectURL(url)
   }, [coverFile])
+
+  const displayedCoverUrl = coverPreviewUrl ?? initialCoverUrl
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -112,9 +127,9 @@ function BookRegisterForm({ fieldErrors = {}, formError, isSubmitting = false, o
           Imagen de portada
         </label>
         <div className="flex items-center gap-3">
-          {coverPreviewUrl ? (
+          {displayedCoverUrl ? (
             <img
-              src={coverPreviewUrl}
+              src={displayedCoverUrl}
               alt="Vista previa de la portada"
               className="h-20 w-20 rounded-lg border border-primary/20 object-cover"
             />
@@ -164,9 +179,10 @@ function BookRegisterForm({ fieldErrors = {}, formError, isSubmitting = false, o
         </p>
       )}
 
-      <div className="flex justify-end sm:col-span-2">
+      <div className="flex items-center justify-between sm:col-span-2">
+        <div>{extraActions}</div>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Guardando…' : 'Guardar libro'}
+          {isSubmitting ? 'Guardando…' : submitLabel}
         </Button>
       </div>
     </form>

@@ -1,7 +1,7 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common'
-import { MetricsService } from './metrics.service.js'
-import { TopListQueryDto } from './dto/top-list-query.dto.js'
-import { JwtAuthGuard } from '../auth/jwt-auth.guard.js'
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { MetricsService } from './metrics.service.js';
+import { TopListQueryDto } from './dto/top-list-query.dto.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 
 @Controller('metrics')
 @UseGuards(JwtAuthGuard)
@@ -10,16 +10,16 @@ export class MetricsController {
 
   @Get('overview')
   getOverview() {
-    return this.metricsService.getOverview()
+    return this.metricsService.getOverview();
   }
 
   @Get('top-categories')
   getTopCategories(@Query() query: TopListQueryDto) {
-    return this.metricsService.getTopCategories(query.limit)
+    return this.metricsService.getTopCategories(query.limit);
   }
 
   @Get('top-cities')
   getTopCities(@Query() query: TopListQueryDto) {
-    return this.metricsService.getTopCities(query.limit)
+    return this.metricsService.getTopCities(query.limit);
   }
 }

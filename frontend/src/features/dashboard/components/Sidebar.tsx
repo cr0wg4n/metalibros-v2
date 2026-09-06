@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: ROUTES.booksPublished, label: 'Libros Publicados' },
   { to: ROUTES.booksNew, label: 'Registro de Libros' },
   { to: ROUTES.booksManage, label: 'Administración de Libros' },
+  { to: ROUTES.sales, label: 'Historial de Ventas' },
 ]
 
 function navItemClass({ isActive }: { isActive: boolean }) {

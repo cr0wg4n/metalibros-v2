@@ -4,10 +4,22 @@ import type { ApiBook } from '../services/books-service'
 interface BookAdminTableProps {
   books: ApiBook[]
   updatingBookId: string | null
+  deletingBookId: string | null
+  adjustingStockBookId: string | null
   onToggleStatus: (book: ApiBook) => void
+  onDelete: (book: ApiBook) => void
+  onAdjustStock: (book: ApiBook, quantity: number) => void
 }
 
-function BookAdminTable({ books, updatingBookId, onToggleStatus }: BookAdminTableProps) {
+function BookAdminTable({
+  books,
+  updatingBookId,
+  deletingBookId,
+  adjustingStockBookId,
+  onToggleStatus,
+  onDelete,
+  onAdjustStock,
+}: BookAdminTableProps) {
   return (
     <div className="overflow-x-auto rounded-2xl border border-primary/12 bg-white shadow-[0_10px_24px_rgba(51,104,160,0.08)]">
       <table className="w-full min-w-175 border-collapse">
@@ -28,7 +40,11 @@ function BookAdminTable({ books, updatingBookId, onToggleStatus }: BookAdminTabl
               key={book.id}
               book={book}
               isUpdating={updatingBookId === book.id}
+              isDeleting={deletingBookId === book.id}
+              isAdjustingStock={adjustingStockBookId === book.id}
               onToggleStatus={onToggleStatus}
+              onDelete={onDelete}
+              onAdjustStock={onAdjustStock}
             />
           ))}
         </tbody>

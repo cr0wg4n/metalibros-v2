@@ -1,11 +1,11 @@
-import 'dotenv/config'
+import 'dotenv/config';
 
 function requireEnv(name: string): string {
-  const value = process.env[name]
+  const value = process.env[name];
   if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`)
+    throw new Error(`Missing required environment variable: ${name}`);
   }
-  return value
+  return value;
 }
 
 export const env = {
@@ -15,4 +15,4 @@ export const env = {
   databaseUrl: requireEnv('DATABASE_URL'),
   jwtSecret: requireEnv('JWT_SECRET'),
   frontendOrigin: process.env.FRONTEND_ORIGIN ?? 'http://localhost:5173',
-} as const
+} as const;

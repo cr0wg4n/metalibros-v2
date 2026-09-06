@@ -1,19 +1,19 @@
-import { IsIn, IsInt, IsOptional, IsString, NotEquals } from 'class-validator'
+import { IsIn, IsInt, IsOptional, IsString, NotEquals } from 'class-validator';
 
-const MANUAL_MOVEMENT_TYPES = ['RESTOCK', 'ADJUSTMENT', 'RETURN'] as const
+const MANUAL_MOVEMENT_TYPES = ['RESTOCK', 'ADJUSTMENT', 'RETURN'] as const;
 
 export class CreateStockMovementDto {
   @IsString()
-  bookId: string
+  bookId: string;
 
   @IsInt()
   @NotEquals(0)
-  quantity: number
+  quantity: number;
 
   @IsIn(MANUAL_MOVEMENT_TYPES)
-  type: (typeof MANUAL_MOVEMENT_TYPES)[number]
+  type: (typeof MANUAL_MOVEMENT_TYPES)[number];
 
   @IsOptional()
   @IsString()
-  note?: string
+  note?: string;
 }

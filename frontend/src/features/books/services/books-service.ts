@@ -43,6 +43,15 @@ export async function listBooks(params: ListBooksParams = {}): Promise<ListBooks
   return data
 }
 
+export async function getBook(bookId: string): Promise<ApiBook> {
+  try {
+    const { data } = await api.get<ApiBook>(`/books/${bookId}`)
+    return data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'No se pudo cargar el libro'))
+  }
+}
+
 export interface CreateBookPayload {
   name: string
   author: string
@@ -80,6 +89,35 @@ export async function updateBookStatus(bookId: string, status: ApiBookStatus): P
     return data
   } catch (error) {
     throw new Error(extractErrorMessage(error, 'No se pudo actualizar el estado del libro'))
+  }
+}
+
+export async function updateBook(bookId: string, payload: CreateBookPayload): Promise<ApiBook> {
+  try {
+    const { data } = await api.patch<ApiBook>(`/books/${bookId}`, payload)
+    return data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'No se pudo actualizar el libro'))
+  }
+}
+
+export async function deleteBook(bookId: string): Promise<void> {
+  try {
+    await api.delete(`/books/${bookId}`)
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'No se pudo eliminar el libro'))
+  }
+}
+
+export async function adjustBookStock(bookId: string, quantity: number): Promise<void> {
+  try {
+    await api.post('/stock-movements', {
+      bookId,
+      quantity,
+      type: quantity > 0 ? 'RESTOCK' : 'ADJUSTMENT',
+    })
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'No se pudo ajustar el stock'))
   }
 }
 
