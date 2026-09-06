@@ -1,5 +1,3 @@
-import { randomUUID } from 'node:crypto'
-import { extname, join } from 'node:path'
 import {
   BadRequestException,
   Body,
@@ -10,36 +8,19 @@ import {
   Patch,
   Post,
   Query,
-  UnsupportedMediaTypeException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
-import { FileInterceptor } from '@nestjs/platform-express'
-import { diskStorage } from 'multer'
 import { BooksService } from './books.service.js'
 import { CreateBookDto } from './dto/create-book.dto.js'
 import { UpdateBookDto } from './dto/update-book.dto.js'
 import { UpdateBookStatusDto } from './dto/update-book-status.dto.js'
 import { ListBooksQueryDto } from './dto/list-books-query.dto.js'
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js'
+import { createImageUploadInterceptor } from '../common/create-image-upload-interceptor.js'
 
-const IMAGE_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
-
-const coverUploadInterceptor = FileInterceptor('file', {
-  storage: diskStorage({
-    destination: join(process.cwd(), 'uploads', 'books'),
-    filename: (_req, file, callback) => callback(null, `${randomUUID()}${extname(file.originalname)}`),
-  }),
-  fileFilter: (_req, file, callback) => {
-    if (!IMAGE_MIME_TYPES.has(file.mimetype)) {
-      callback(new UnsupportedMediaTypeException('Solo se aceptan imágenes JPEG, PNG o WEBP'), false)
-      return
-    }
-    callback(null, true)
-  },
-  limits: { fileSize: 5 * 1024 * 1024 },
-})
+const coverUploadInterceptor = createImageUploadInterceptor('books')
 
 @Controller('books')
 export class BooksController {

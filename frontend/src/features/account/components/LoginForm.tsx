@@ -41,12 +41,6 @@ function LoginForm({ fieldErrors = {}, formError, isSubmitting = false, onSubmit
         error={fieldErrors.password}
       />
 
-      <div className="flex items-center justify-between gap-4 text-sm">
-        <a className="font-semibold text-primary no-underline" href="#">
-          ¿Olvidaste tu contraseña?
-        </a>
-      </div>
-
       {formError && (
         <p className="text-sm text-red-600" role="alert">
           {formError}

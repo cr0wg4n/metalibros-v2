@@ -1,17 +1,23 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, Navigate } from 'react-router-dom'
 import LoginForm from '../components/LoginForm'
 import { loginSchema, type LoginFormValues } from '../schemas/login-schema'
 import { login } from '../services/auth-service'
 import { ROUTES } from '@/config/routes'
+import { useAuthStore } from '@/store/auth-store'
 
 type FieldErrors = Partial<Record<keyof LoginFormValues, string>>
 
 function LoginPage() {
   const navigate = useNavigate()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  if (isAuthenticated) {
+    return <Navigate to={ROUTES.dashboard} replace />
+  }
 
   async function handleSubmit(values: LoginFormValues) {
     setFormError(null)
@@ -32,7 +38,7 @@ function LoginPage() {
 
     try {
       await login(result.data)
-      navigate(ROUTES.account)
+      navigate(ROUTES.dashboard)
     } catch (error) {
       setFormError(error instanceof Error ? error.message : 'No se pudo iniciar sesión')
     } finally {
