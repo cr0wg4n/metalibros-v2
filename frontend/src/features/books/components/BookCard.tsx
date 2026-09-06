@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import type { Book } from '../types'
+import { ROUTES } from '@/config/routes'
 
 interface BookCardProps {
   book: Book
@@ -19,7 +20,7 @@ function BookCard({ book }: BookCardProps) {
       <p className="line-clamp-3 text-sm text-dark/80">{book.description}</p>
 
       <p className="mt-2 text-right">
-        <Link className="text-sm font-medium text-primary no-underline active:text-accent" to="/login">
+        <Link className="text-sm font-medium text-primary no-underline active:text-accent" to={ROUTES.login}>
           Ver más
         </Link>
       </p>
