@@ -10,7 +10,9 @@ function DashboardLayout() {
     <div className="flex min-h-screen w-full flex-col md:flex-row">
       <MobileTopBar onOpenMenu={() => setIsSidebarOpen(true)} />
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-      <Outlet />
+      <div className="min-w-0 flex-1">
+        <Outlet />
+      </div>
     </div>
   )
 }
