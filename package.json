@@ -11,6 +11,9 @@
     "name": "Mauricio Matias"
   },
   "scripts": {
+    "migrate": "npm run db:migrate -w backend",
+    "generate": "npm run db:generate -w backend",
+    "seed": "npm run db:seed -w backend",
     "frontend": "npm run dev -w frontend",
     "backend": "npm run start -w backend"
   },

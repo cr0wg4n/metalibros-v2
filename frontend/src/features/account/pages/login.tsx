@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import LoginForm from '../components/LoginForm'
 import { loginSchema, type LoginFormValues } from '../schemas/login-schema'
 import { login } from '../services/auth-service'
+import { ROUTES } from '@/config/routes'
 
 type FieldErrors = Partial<Record<keyof LoginFormValues, string>>
 
@@ -31,7 +32,7 @@ function LoginPage() {
 
     try {
       await login(result.data)
-      navigate('/account')
+      navigate(ROUTES.account)
     } catch (error) {
       setFormError(error instanceof Error ? error.message : 'No se pudo iniciar sesión')
     } finally {
@@ -55,7 +56,7 @@ function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-muted">
           ¿No tienes cuenta?{' '}
-          <Link className="font-semibold text-primary no-underline" to="/signup">
+          <Link className="font-semibold text-primary no-underline" to={ROUTES.signup}>
             Regístrate
           </Link>
         </p>

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import SignUpForm from '../components/SignUpForm'
 import { signUpSchema, type SignUpFormValues } from '../schemas/sign-up-schema'
 import { signUp } from '../services/auth-service'
+import { ROUTES } from '@/config/routes'
 
 type FieldErrors = Partial<Record<keyof SignUpFormValues, string>>
 
@@ -32,7 +33,7 @@ function SignUpPage() {
     try {
       const { name, email, password } = result.data
       await signUp({ name, email, password })
-      navigate('/account')
+      navigate(ROUTES.account)
     } catch (error) {
       setFormError(error instanceof Error ? error.message : 'No se pudo crear la cuenta')
     } finally {
@@ -56,7 +57,7 @@ function SignUpPage() {
 
         <p className="mt-6 text-center text-sm text-muted">
           ¿Ya tienes cuenta?{' '}
-          <Link className="font-semibold text-primary no-underline" to="/login">
+          <Link className="font-semibold text-primary no-underline" to={ROUTES.login}>
             Inicia sesión
           </Link>
         </p>
