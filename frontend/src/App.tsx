@@ -4,6 +4,7 @@ import LandingPage from './features/landing/pages'
 import BooksPage from './features/books/pages'
 import AccountPage from './features/account/pages'
 import LoginPage from './features/account/pages/login'
+import SignUpPage from './features/account/pages/sign-up'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/books" element={<BooksPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
         </Routes>
       </div>
     </BrowserRouter>

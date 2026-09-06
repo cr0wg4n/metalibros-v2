@@ -20,6 +20,9 @@
   },
   "keywords": [],
   "type": "module",
+  "overrides": {
+    "better-sqlite3": "13.0.3"
+  },
   "bugs": {
     "url": "https://github.com/cr0wg4n/metalibros-v2/issues"
   },
