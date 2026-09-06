@@ -5,14 +5,15 @@ import { AuthService } from './auth.service.js'
 import { JwtAuthGuard } from './jwt-auth.guard.js'
 import { env } from '../config/env.js'
 
+const jwtModule = JwtModule.register({
+  secret: env.jwtSecret,
+  signOptions: { expiresIn: '15m' },
+})
+
 @Module({
-  imports: [
-    JwtModule.register({
-      secret: env.jwtSecret,
-      signOptions: { expiresIn: '15m' },
-    }),
-  ],
+  imports: [jwtModule],
   controllers: [AuthController],
   providers: [AuthService, JwtAuthGuard],
+  exports: [JwtAuthGuard, jwtModule],
 })
 export class AuthModule {}

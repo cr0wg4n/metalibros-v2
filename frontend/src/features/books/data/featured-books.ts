@@ -10,6 +10,7 @@ export const featuredBooks: Book[] = [
   {
     id: 'dune',
     title: 'Dune',
+    author: 'Frank Herbert',
     description:
       'Una historia épica sobre poder, destino y supervivencia en un planeta desértico donde la especia determina el futuro del universo.',
     price: 120,
@@ -19,6 +20,7 @@ export const featuredBooks: Book[] = [
   {
     id: 'modernidad-liquida',
     title: 'Modernidad líquida',
+    author: 'Zygmunt Bauman',
     description:
       'Una reflexión profunda sobre la sociedad contemporánea, la inseguridad y la velocidad que transforman la identidad individual.',
     price: 90,
@@ -28,6 +30,7 @@ export const featuredBooks: Book[] = [
   {
     id: 'agonia-del-eros',
     title: 'La Agonía del Eros',
+    author: 'Byung-Chul Han',
     description: 'Un ensayo que analiza la crisis del deseo, la intimidad y el sentido del amor en la modernidad.',
     price: 85,
     cover: agoniaDelEros,
@@ -36,6 +39,7 @@ export const featuredBooks: Book[] = [
   {
     id: 'pride-and-prejudice',
     title: 'Orgullo y Prejuicio',
+    author: 'Jane Austen',
     description:
       'Una historia de amor, orgullo y prejuicios que revela la complejidad de las relaciones humanas y la sociedad inglesa.',
     price: 75,
@@ -45,6 +49,7 @@ export const featuredBooks: Book[] = [
   {
     id: 'no-cosas',
     title: 'No Cosas',
+    author: 'Byung-Chul Han',
     description:
       'Un libro que cuestiona la obsesión por acumular objetos y propone una vida más consciente, simple y auténtica.',
     price: 70,
@@ -54,6 +59,7 @@ export const featuredBooks: Book[] = [
   {
     id: 'atomic-habits',
     title: 'Hábitos Atómicos',
+    author: 'James Clear',
     description:
       'Una guía práctica para construir mejores hábitos mediante cambios pequeños, consistentes y sostenibles en el tiempo.',
     price: 110,
