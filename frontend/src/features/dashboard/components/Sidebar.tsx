@@ -7,9 +7,9 @@ import { logout } from '@/features/account/services/auth-service'
 
 const NAV_ITEMS = [
   { to: ROUTES.dashboard, label: 'Dashboard' },
-  { to: ROUTES.dashboardBooks, label: 'Libros Publicados' },
-  { to: ROUTES.dashboardBooksNew, label: 'Registro de Libros' },
-  { to: ROUTES.dashboardBooksManage, label: 'Administración de Libros' },
+  { to: ROUTES.booksPublished, label: 'Libros Publicados' },
+  { to: ROUTES.booksNew, label: 'Registro de Libros' },
+  { to: ROUTES.booksManage, label: 'Administración de Libros' },
 ]
 
 function navItemClass({ isActive }: { isActive: boolean }) {
@@ -76,7 +76,7 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
 
         <div className="mt-4 flex flex-col gap-1 border-t border-primary/10 pt-3">
-          <NavLink to={ROUTES.dashboardProfile} end className={navItemClass} onClick={onClose}>
+          <NavLink to={ROUTES.profile} end className={navItemClass} onClick={onClose}>
             <Settings className="h-5 w-5" />
             Configurar perfil
           </NavLink>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import DashboardNav from '../components/DashboardNav'
+import DashboardNav from '@/features/dashboard/components/DashboardNav'
 import BookRegisterForm, { type BookRegisterFormValues } from '@/features/books/components/BookRegisterForm'
 import { bookSchema } from '@/features/books/schemas/book-schema'
 import { createBook, uploadBookCover } from '@/features/books/services/books-service'
@@ -41,7 +41,7 @@ function BookRegisterPage() {
         await uploadBookCover(book.id, coverFile)
       }
 
-      navigate(ROUTES.dashboardBooks)
+      navigate(ROUTES.booksPublished)
     } catch (error) {
       setFormError(error instanceof Error ? error.message : 'No se pudo registrar el libro')
     } finally {

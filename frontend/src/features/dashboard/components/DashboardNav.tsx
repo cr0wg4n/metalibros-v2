@@ -15,7 +15,7 @@ function DashboardNav({ title }: DashboardNavProps) {
     <nav className="flex w-full items-center justify-between bg-white p-6">
       <h1 className="text-xl font-bold text-primary">{title}</h1>
 
-      <Link to={ROUTES.dashboardProfile} aria-label="Ir a mi perfil">
+      <Link to={ROUTES.profile} aria-label="Ir a mi perfil">
         {avatarUrl ? (
           <img src={avatarUrl} alt="" className="h-10 w-10 rounded-full object-cover" />
         ) : (

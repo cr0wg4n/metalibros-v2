@@ -1,4 +1,4 @@
-import DashboardNav from '../components/DashboardNav'
+import DashboardNav from '@/features/dashboard/components/DashboardNav'
 import BookCard from '@/features/books/components/BookCard'
 import Pagination from '@/components/ui/Pagination'
 import Input from '@/components/ui/Input'
@@ -7,7 +7,7 @@ import { resolveCoverUrl } from '@/features/books/services/books-service'
 
 const PAGE_SIZE = 4
 
-function DashboardBooksPage() {
+function PublishedBooksPage() {
   const { books, page, setPage, totalPages, search, setSearch, debouncedSearch, isLoading, error } =
     usePublishedBooks(PAGE_SIZE)
 
@@ -61,4 +61,4 @@ function DashboardBooksPage() {
   )
 }
 
-export default DashboardBooksPage
+export default PublishedBooksPage

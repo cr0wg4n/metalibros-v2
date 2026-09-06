@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import DashboardNav from '../components/DashboardNav'
+import DashboardNav from '@/features/dashboard/components/DashboardNav'
 import BookAdminTable from '@/features/books/components/BookAdminTable'
 import Pagination from '@/components/ui/Pagination'
 import Input from '@/components/ui/Input'

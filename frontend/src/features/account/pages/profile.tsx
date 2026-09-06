@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import DashboardNav from '../components/DashboardNav'
+import DashboardNav from '@/features/dashboard/components/DashboardNav'
 import AvatarPicker from '@/features/account/components/AvatarPicker'
 import ProfileForm, { type ProfileFormValues } from '@/features/account/components/ProfileForm'
 import { profileSchema } from '@/features/account/schemas/profile-schema'

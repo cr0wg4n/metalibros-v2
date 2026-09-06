@@ -1,12 +1,11 @@
 export const ROUTES = {
   home: '/',
   books: '/books',
-  account: '/account',
+  booksPublished: '/books/published',
+  booksNew: '/books/new',
+  booksManage: '/books/manage',
   login: '/login',
   signup: '/signup',
   dashboard: '/dashboard',
-  dashboardBooks: '/dashboard/books',
-  dashboardBooksNew: '/dashboard/books/new',
-  dashboardBooksManage: '/dashboard/books/manage',
-  dashboardProfile: '/dashboard/profile',
+  profile: '/profile',
 } as const

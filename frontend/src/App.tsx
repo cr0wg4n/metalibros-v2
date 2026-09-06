@@ -3,14 +3,13 @@ import PublicLayout from './components/layout/PublicLayout'
 import DashboardLayout from './components/layout/DashboardLayout'
 import LandingPage from './features/landing/pages'
 import BooksPage from './features/books/pages'
-import AccountPage from './features/account/pages'
 import LoginPage from './features/account/pages/login'
 import SignUpPage from './features/account/pages/sign-up'
 import DashboardPage from './features/dashboard/pages'
-import DashboardBooksPage from './features/dashboard/pages/books'
-import BookRegisterPage from './features/dashboard/pages/book-register'
-import BookAdminPage from './features/dashboard/pages/book-admin'
-import ProfilePage from './features/dashboard/pages/profile'
+import PublishedBooksPage from './features/books/pages/published'
+import BookRegisterPage from './features/books/pages/register'
+import BookAdminPage from './features/books/pages/admin'
+import ProfilePage from './features/account/pages/profile'
 import { ROUTES } from './config/routes'
 import { useAuthBootstrap } from './features/account/hooks/use-auth-bootstrap'
 
@@ -24,17 +23,16 @@ function App() {
           <Route element={<PublicLayout />}>
             <Route path={ROUTES.home} element={<LandingPage />} />
             <Route path={ROUTES.books} element={<BooksPage />} />
-            <Route path={ROUTES.account} element={<AccountPage />} />
             <Route path={ROUTES.login} element={<LoginPage />} />
             <Route path={ROUTES.signup} element={<SignUpPage />} />
           </Route>
 
           <Route element={<DashboardLayout />}>
             <Route path={ROUTES.dashboard} element={<DashboardPage />} />
-            <Route path={ROUTES.dashboardBooks} element={<DashboardBooksPage />} />
-            <Route path={ROUTES.dashboardBooksNew} element={<BookRegisterPage />} />
-            <Route path={ROUTES.dashboardBooksManage} element={<BookAdminPage />} />
-            <Route path={ROUTES.dashboardProfile} element={<ProfilePage />} />
+            <Route path={ROUTES.booksPublished} element={<PublishedBooksPage />} />
+            <Route path={ROUTES.booksNew} element={<BookRegisterPage />} />
+            <Route path={ROUTES.booksManage} element={<BookAdminPage />} />
+            <Route path={ROUTES.profile} element={<ProfilePage />} />
           </Route>
         </Routes>
       </div>
