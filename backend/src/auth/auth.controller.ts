@@ -1,11 +1,28 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Patch,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
 import type { Request, Response } from 'express'
 import { AuthService, REFRESH_TOKEN_TTL_MS } from './auth.service.js'
 import { SignUpDto } from './dto/sign-up.dto.js'
 import { LoginDto } from './dto/login.dto.js'
 import { JwtAuthGuard } from './jwt-auth.guard.js'
-import { PrismaService } from '../prisma/prisma.service.js'
 import { env } from '../config/env.js'
+import { ProfileService } from '../profile/profile.service.js'
+import { UpdateProfileDto } from '../profile/dto/update-profile.dto.js'
+import { createImageUploadInterceptor } from '../common/create-image-upload-interceptor.js'
 
 const REFRESH_COOKIE_NAME = 'refreshToken'
 const REFRESH_COOKIE_OPTIONS = {
@@ -15,11 +32,13 @@ const REFRESH_COOKIE_OPTIONS = {
   path: '/auth',
 }
 
+const avatarUploadInterceptor = createImageUploadInterceptor('avatars')
+
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly prisma: PrismaService,
+    private readonly profileService: ProfileService,
   ) {}
 
   @Post('signup')
@@ -62,9 +81,24 @@ export class AuthController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async me(@Req() request: Request) {
-    const user = await this.prisma.user.findUniqueOrThrow({ where: { id: request.user!.sub } })
-    return { id: user.id, email: user.email, name: user.name }
+  me(@Req() request: Request) {
+    return this.profileService.getProfile(request.user!.sub)
+  }
+
+  @Patch('me')
+  @UseGuards(JwtAuthGuard)
+  updateMe(@Req() request: Request, @Body() dto: UpdateProfileDto) {
+    return this.profileService.updateProfile(request.user!.sub, dto)
+  }
+
+  @Post('me/avatar')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(avatarUploadInterceptor)
+  uploadAvatar(@Req() request: Request, @UploadedFile() file?: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('Falta el archivo de imagen')
+    }
+    return this.profileService.updateAvatar(request.user!.sub, `/uploads/avatars/${file.filename}`)
   }
 
   private setRefreshCookie(response: Response, token: string) {
