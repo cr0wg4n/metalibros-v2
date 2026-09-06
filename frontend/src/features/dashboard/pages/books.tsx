@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
-import { debounce } from 'es-toolkit'
+import { useEffect, useState } from 'react'
 import DashboardNav from '../components/DashboardNav'
 import BookCard from '@/features/books/components/BookCard'
 import Pagination from '@/components/ui/Pagination'
 import Input from '@/components/ui/Input'
+import { useDebouncedValue } from '@/hooks/use-debounced-value'
 import { listBooks, resolveCoverUrl, type ApiBook } from '@/features/books/services/books-service'
 
 const PAGE_SIZE = 4
@@ -16,21 +16,12 @@ function DashboardBooksPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
 
-  const debouncedApplySearch = useMemo(
-    () =>
-      debounce((value: string) => {
-        setDebouncedSearch(value)
-        setPage(1)
-      }, SEARCH_DEBOUNCE_MS),
-    [],
-  )
+  const debouncedSearch = useDebouncedValue(search.trim(), SEARCH_DEBOUNCE_MS)
 
   useEffect(() => {
-    debouncedApplySearch(search.trim())
-    return () => debouncedApplySearch.cancel()
-  }, [search, debouncedApplySearch])
+    setPage(1)
+  }, [debouncedSearch])
 
   useEffect(() => {
     let cancelled = false

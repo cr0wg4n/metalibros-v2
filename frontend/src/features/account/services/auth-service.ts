@@ -1,6 +1,6 @@
-import { AxiosError } from 'axios'
 import { api, setAccessToken } from '@/lib/api'
 import { useAuthStore } from '@/store/auth-store'
+import { extractErrorMessage } from '@/lib/extract-error-message'
 import type { LoginFormValues } from '../schemas/login-schema'
 
 export interface AuthUser {
@@ -18,15 +18,6 @@ export interface SignUpPayload {
   name: string
   email: string
   password: string
-}
-
-function extractErrorMessage(error: unknown, fallback: string): string {
-  if (error instanceof AxiosError) {
-    const message = error.response?.data?.message
-    if (Array.isArray(message)) return message.join(', ')
-    if (typeof message === 'string') return message
-  }
-  return fallback
 }
 
 function applySession(session: AuthSession) {

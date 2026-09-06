@@ -8,6 +8,8 @@ import LoginPage from './features/account/pages/login'
 import SignUpPage from './features/account/pages/sign-up'
 import DashboardPage from './features/dashboard/pages'
 import DashboardBooksPage from './features/dashboard/pages/books'
+import BookRegisterPage from './features/dashboard/pages/book-register'
+import BookAdminPage from './features/dashboard/pages/book-admin'
 import { ROUTES } from './config/routes'
 import { useAuthBootstrap } from './features/account/hooks/use-auth-bootstrap'
 
@@ -29,6 +31,8 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path={ROUTES.dashboard} element={<DashboardPage />} />
             <Route path={ROUTES.dashboardBooks} element={<DashboardBooksPage />} />
+            <Route path={ROUTES.dashboardBooksNew} element={<BookRegisterPage />} />
+            <Route path={ROUTES.dashboardBooksManage} element={<BookAdminPage />} />
           </Route>
         </Routes>
       </div>

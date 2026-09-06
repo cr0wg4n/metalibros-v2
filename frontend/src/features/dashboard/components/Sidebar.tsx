@@ -1,17 +1,19 @@
 import { useEffect } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { LogOut, Settings } from 'lucide-react'
 import logo from '@/assets/images/brand/metalibros.png'
 import { ROUTES } from '@/config/routes'
+import { logout } from '@/features/account/services/auth-service'
 
 const NAV_ITEMS = [
-  { to: ROUTES.dashboard, label: 'Dashboard', end: true },
+  { to: ROUTES.dashboard, label: 'Dashboard' },
   { to: ROUTES.dashboardBooks, label: 'Libros Publicados' },
   { to: ROUTES.dashboardBooksNew, label: 'Registro de Libros' },
   { to: ROUTES.dashboardBooksManage, label: 'Administración de Libros' },
 ]
 
 function navItemClass({ isActive }: { isActive: boolean }) {
-  return `block rounded-xl px-4 py-3.5 font-medium no-underline transition-colors ${
+  return `flex items-center gap-2 rounded-xl px-4 py-3.5 font-medium no-underline transition-colors ${
     isActive ? 'bg-gradient-to-br from-secondary to-primary font-bold text-white' : 'text-primary hover:font-bold'
   }`
 }
@@ -22,6 +24,14 @@ interface SidebarProps {
 }
 
 function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    onClose()
+    await logout()
+    navigate(ROUTES.home)
+  }
+
   useEffect(() => {
     if (!isOpen) return
 
@@ -58,17 +68,26 @@ function Sidebar({ isOpen, onClose }: SidebarProps) {
 
           <nav className="mt-4 flex flex-1 flex-col gap-3">
             {NAV_ITEMS.map((item) => (
-              <NavLink key={item.to} to={item.to} end={item.end} className={navItemClass} onClick={onClose}>
+              <NavLink key={item.to} to={item.to} end className={navItemClass} onClick={onClose}>
                 {item.label}
               </NavLink>
             ))}
           </nav>
         </div>
 
-        <div className="mt-4 border-t border-primary/10 pt-3">
-          <NavLink to={ROUTES.dashboardProfile} className={navItemClass} onClick={onClose}>
+        <div className="mt-4 flex flex-col gap-1 border-t border-primary/10 pt-3">
+          <NavLink to={ROUTES.dashboardProfile} end className={navItemClass} onClick={onClose}>
+            <Settings className="h-5 w-5" />
             Configurar perfil
           </NavLink>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex items-center gap-2 rounded-xl px-4 py-3.5 text-left font-medium text-primary transition-colors hover:font-bold"
+          >
+            <LogOut className="h-5 w-5" />
+            Cerrar sesión
+          </button>
         </div>
       </aside>
     </>
