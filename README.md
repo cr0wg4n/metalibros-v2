@@ -134,6 +134,12 @@ Cada proyecto tiene su propio archivo de variables de entorno, es cuestion de co
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
+o para windows:
+
+```bash
+copy backend\.env.example backend\.env
+copy frontend\.env.example frontend\.env
+```
 
 **backend/.env**
 
