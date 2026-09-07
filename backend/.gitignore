@@ -54,3 +54,13 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+tsconfig.build.tsbuildinfo
+
+# Prisma
+/src/generated
+*.db
+*.db-journal
+
+/uploads/*
+!/uploads/.gitkeep
