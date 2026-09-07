@@ -21,14 +21,22 @@ export interface SignUpPayload {
   password: string
 }
 
+const SESSION_HINT_KEY = 'metalibros:has-session'
+
 function applySession(session: AuthSession) {
   setAccessToken(session.accessToken)
   useAuthStore.getState().setUser(session.user)
+  localStorage.setItem(SESSION_HINT_KEY, '1')
 }
 
 function clearSession() {
   setAccessToken(null)
   useAuthStore.getState().clear()
+  localStorage.removeItem(SESSION_HINT_KEY)
+}
+
+export function hasSessionHint(): boolean {
+  return localStorage.getItem(SESSION_HINT_KEY) === '1'
 }
 
 export async function login(values: LoginFormValues): Promise<AuthSession> {

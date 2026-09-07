@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import PublicLayout from './components/layout/PublicLayout'
 import DashboardLayout from './components/layout/DashboardLayout'
+import RequireAuth from './components/layout/RequireAuth'
 import LandingPage from './features/landing/pages'
 import LoginPage from './features/account/pages/login'
 import SignUpPage from './features/account/pages/sign-up'
@@ -37,14 +38,16 @@ function App() {
             <Route path={ROUTES.signup} element={<SignUpPage />} />
           </Route>
 
-          <Route element={<DashboardLayout />}>
-            <Route path={ROUTES.dashboard} element={<DashboardPage />} />
-            <Route path={ROUTES.booksPublished} element={<PublishedBooksPage />} />
-            <Route path={ROUTES.booksNew} element={<BookRegisterPage />} />
-            <Route path={ROUTES.booksEdit} element={<BookEditPage />} />
-            <Route path={ROUTES.booksManage} element={<BookAdminPage />} />
-            <Route path={ROUTES.sales} element={<SalesHistoryPage />} />
-            <Route path={ROUTES.profile} element={<ProfilePage />} />
+          <Route element={<RequireAuth />}>
+            <Route element={<DashboardLayout />}>
+              <Route path={ROUTES.dashboard} element={<DashboardPage />} />
+              <Route path={ROUTES.booksPublished} element={<PublishedBooksPage />} />
+              <Route path={ROUTES.booksNew} element={<BookRegisterPage />} />
+              <Route path={ROUTES.booksEdit} element={<BookEditPage />} />
+              <Route path={ROUTES.booksManage} element={<BookAdminPage />} />
+              <Route path={ROUTES.sales} element={<SalesHistoryPage />} />
+              <Route path={ROUTES.profile} element={<ProfilePage />} />
+            </Route>
           </Route>
 
           <Route path="*" element={<NotFoundRedirect />} />
