@@ -167,7 +167,9 @@ Los comandos previos generan el archivo `backend/dev.db` vacío. Para obtener da
 npm run seed
 ```
 
-## Ejecución
+## Ejecución 
+
+### Modo desarrollo
 
 Para levantar frontend y backend juntos en modo desarrollo corre:
 
@@ -185,10 +187,18 @@ npm run backend   # solo la API
 npm run frontend  # solo la SPA
 ```
 
-### Build de producción
+### Modo producción
+
+Compila ambos proyectos con el comando:
 
 ```bash
 npm run build
 ```
 
-Compila ambos proyectos y como resultado se generan los directorios de salida `backend/dist` y `frontend/dist`.
+Como resultado se generan los directorios de salida `backend/dist` y `frontend/dist`.
+
+Finalmente para correr ambos proyectos en modo producción, corre:
+
+```bash
+npm run all-prod
+```

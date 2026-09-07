@@ -13,6 +13,7 @@
   "scripts": {
     "build": "concurrently \"npm run build -w frontend\" \"npm run build -w backend\"",
     "all": "concurrently \"npm run frontend\" \"npm run backend\"",
+    "all-prod": "concurrently \"npm run backend\" \"npx http-server frontend/dist --port 5173 -P http://localhost:5173?\"",
     "migrate": "npm run db:migrate -w backend",
     "generate": "npm run db:generate -w backend",
     "seed": "npm run db:seed -w backend",
@@ -33,6 +34,7 @@
   },
   "homepage": "https://github.com/cr0wg4n/metalibros-v2#readme",
   "dependencies": {
-    "concurrently": "^10.0.5"
+    "concurrently": "^10.0.5",
+    "http-server": "^14.1.1"
   }
 }
