@@ -2,9 +2,9 @@
   "name": "backend",
   "version": "0.0.1",
   "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
+  "author": {
+    "name": "Mauricio Matias"
+  },
   "type": "module",
   "scripts": {
     "build": "nest build",

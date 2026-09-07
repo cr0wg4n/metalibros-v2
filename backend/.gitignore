@@ -62,6 +62,5 @@ tsconfig.build.tsbuildinfo
 *.db
 *.db-journal
 
-# Uploaded files (served at runtime, not committed — see prisma/seed-assets for seed sources)
 /uploads/*
 !/uploads/.gitkeep
